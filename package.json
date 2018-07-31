@@ -1,0 +1,13 @@
+{
+  "name": "retryable",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Yuji Suzuki <y0suzuki0123@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "live-server ."
+  },
+  "devDependencies": {
+    "live-server": "^1.2.0"
+  }
+}

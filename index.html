@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Retryable</title>
+    <style>
+      .answer, .answer-container, .answer-tip {
+        display: inline-block;
+      }
+      .answer-tip {
+        cursor: pointer;
+        color: #44c;
+        font-size: 80%;
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+      <li><div class="answer"></div>1</li>
+      <li><div class="answer"></div>2</li>
+      <li><div class="answer"></div>3</li>
+    </ul>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" async></script>
+    <script>
+      (() => {
+        'use strict';
+
+        const retryable = (callback, { retryCount = 5, interval = 300 } = {}) => {
+          let timerId;
+          const unregister = () => timerId && clearTimeout(timerId);
+          const wrappedCallback = () => {
+            if (retryCount-- <= 0) return;
+            timerId = setTimeout(wrappedCallback, interval);
+            callback(unregister);
+          };
+          wrappedCallback();
+          return unregister;
+        };
+
+        const hideAnswer = () => {
+          $('.answer').parent().wrapInner('<div class="answer-container">');
+          $('<div class="answer-tip">[SHOW ANSWER]</div>').insertBefore('.answer-container');
+          $('.answer-container').hide();
+          $('.answer-tip').on('click', function () {
+            $(this).parent().children('.answer-container').toggle();
+          });
+        };
+
+        retryable((unregister) => {
+          if (!window.$) return;
+          unregister();
+          hideAnswer();
+        });
+      })();
+    </script>
+  </body>
+</html>
